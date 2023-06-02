@@ -3,6 +3,8 @@ package kuit.server.service;
 import kuit.server.dao.ReviewDao;
 import kuit.server.dto.review.GetRestaurantReviewDto;
 import kuit.server.dto.review.GetUserReviewDto;
+import kuit.server.dto.review.PostUserReviewRequest;
+import kuit.server.dto.review.PostUserReviewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,4 +27,10 @@ public class ReviewService {
         List<GetRestaurantReviewDto> reviewList = reviewDao.findRestaurantReviewList(restaurantId);
         return reviewList;
     }
+
+    public PostUserReviewResponse createUserReview(PostUserReviewRequest postUserReviewRequest) {
+        Long reviewId = reviewDao.createUserReview(postUserReviewRequest);
+        return new PostUserReviewResponse(reviewId);
+    }
+
 }
