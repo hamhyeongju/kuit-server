@@ -3,12 +3,12 @@ package kuit.server.controller;
 import kuit.server.common.response.BaseResponse;
 import kuit.server.dto.review.GetRestaurantReviewDto;
 import kuit.server.dto.review.GetUserReviewDto;
+import kuit.server.dto.review.PostUserReviewRequest;
+import kuit.server.dto.review.PostUserReviewResponse;
 import kuit.server.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +32,15 @@ public class ReviewController {
 
         List<GetUserReviewDto> reviewDtoList = reviewService.findUserReviewList(userId);
         BaseResponse<List<GetUserReviewDto>> response = new BaseResponse<>(reviewDtoList);
+        return response;
+    }
+
+    @PostMapping("/user/{userId}/restaurants/{restaurantId}/review")
+    public BaseResponse<PostUserReviewResponse> findUserReviewList(
+            @ModelAttribute PostUserReviewRequest postUserReviewRequest) {
+
+        PostUserReviewResponse userReviewDto = reviewService.createUserReview(postUserReviewRequest);
+        BaseResponse<PostUserReviewResponse> response = new BaseResponse<>(userReviewDto);
         return response;
     }
 
