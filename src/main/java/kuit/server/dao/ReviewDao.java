@@ -2,13 +2,20 @@ package kuit.server.dao;
 
 import kuit.server.dto.review.GetRestaurantReviewDto;
 import kuit.server.dto.review.GetUserReviewDto;
+import kuit.server.dto.review.PostUserReviewRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 @Slf4j
@@ -71,5 +78,20 @@ public class ReviewDao {
                         rs.getTimestamp("RC.created_ad").toLocalDateTime().toLocalDate()
                 )
         );
+    }
+
+    public Long createUserReview(PostUserReviewRequest postUserReviewRequest) {
+        String sql = "insert into review(" +
+                "scope, description, file_path, status, restaurant_id, user_id, created_at, updated_at) " +
+                "values(:scope, :description, :filePath, :status, :restaurantId, :userId, :createdAt, :updatedAt)";
+
+        postUserReviewRequest.setStatus("active");
+        postUserReviewRequest.setCreatedAt(LocalDateTime.now());
+        postUserReviewRequest.setUpdatedAt(LocalDateTime.now());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(postUserReviewRequest);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, param, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 }
