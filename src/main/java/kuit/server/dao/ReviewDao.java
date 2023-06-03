@@ -2,6 +2,7 @@ package kuit.server.dao;
 
 import kuit.server.dto.review.GetRestaurantReviewDto;
 import kuit.server.dto.review.GetUserReviewDto;
+import kuit.server.dto.review.PostReviewCommentRequest;
 import kuit.server.dto.review.PostUserReviewRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -93,5 +94,21 @@ public class ReviewDao {
         jdbcTemplate.update(sql, param, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Long createReviewComment(PostReviewCommentRequest requestDto) {
+        String sql = "insert into review_comment(" +
+                "description, status, created_at, updated_at, review_id) " +
+                "values(:description, :status, :createdAt, :updatedAt, :reviewId)";
+
+        requestDto.setStatus("active");
+        requestDto.setCreatedAt(LocalDateTime.now());
+        requestDto.setUpdatedAt(LocalDateTime.now());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(requestDto);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, param, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+
     }
 }
