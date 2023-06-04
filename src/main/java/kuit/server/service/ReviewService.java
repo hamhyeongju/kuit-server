@@ -1,5 +1,6 @@
 package kuit.server.service;
 
+import kuit.server.common.exception.DatabaseException;
 import kuit.server.dao.ReviewDao;
 import kuit.server.dto.review.*;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static kuit.server.common.response.status.BaseExceptionResponseStatus.DATABASE_ERROR;
 
 @Service
 @Slf4j
@@ -33,5 +36,9 @@ public class ReviewService {
     public PostReviewCommentResponse createReviewComment(PostReviewCommentRequest requestDto) {
         Long reviewCommentId = reviewDao.createReviewComment(requestDto);
         return new PostReviewCommentResponse(reviewCommentId);
+    }
+
+    public void deleteReview(DeleteReviewRequest requestDto) {
+        if (reviewDao.deleteReview(requestDto) == 0) throw new DatabaseException(DATABASE_ERROR);
     }
 }
