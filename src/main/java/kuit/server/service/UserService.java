@@ -114,4 +114,7 @@ public class UserService {
         }
     }
 
+    public GetUserResponseDto findById(Long userId) {
+        return userDao.findById(userId);
+    }
 }

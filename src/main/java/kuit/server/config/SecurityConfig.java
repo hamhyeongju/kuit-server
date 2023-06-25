@@ -23,6 +23,7 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .formLogin().disable()
+                .securityMatcher("/users/{userId}")
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }

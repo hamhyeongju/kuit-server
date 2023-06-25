@@ -99,4 +99,9 @@ public class UserController {
         return new BaseResponse<>(userService.getUsers(nickname, email, status));
     }
 
+    @GetMapping("/{userId}")
+    public BaseResponse<GetUserResponseDto> findById(@PathVariable Long userId) {
+        GetUserResponseDto dto = userService.findById(userId);
+        return new BaseResponse<>(dto);
+    }
 }
